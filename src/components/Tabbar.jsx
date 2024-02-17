@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import clsx from 'clsx';
+import ProfileTweets from './ProfileTweets';
 
-const Tabbar = () => {
+const Tabbar = ({ userId }) => {
   const tabs = [
     {
       key: 0,
       title: 'Tweets',
-      body: <>Tweets</>
+      body: <ProfileTweets userId={userId} />
     },
     {
       key: 1,
@@ -50,7 +51,7 @@ const Tabbar = () => {
         </ul>
 
       </div>
-      <div className="p-4">
+      <div className="">
         {tabs[activeTab].body}
       </div>
     </div>
