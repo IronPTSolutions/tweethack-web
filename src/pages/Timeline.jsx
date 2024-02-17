@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react"
-import { getTimeline } from "../services/TweetsService";
+import { createTweet, getTimeline } from "../services/TweetsService";
 import Tweet from "../components/Tweet";
 import AuthContext from "../contexts/AuthContext";
 import Button from "../components/Button";
+import Input from "../components/Input";
 
 function removeDuplicates(array) {
   const uniqueArray = [];
@@ -30,6 +31,15 @@ const Timeline = () => {
   const [loading, setLoading] = useState(true);
   const [canShowButton, setCanShowButton] = useState(true);
 
+
+  const [tweetText, setTweetText] = useState('');
+
+  const onChange = (event) => {
+    const value = event.target.value
+
+    setTweetText(value);
+  }
+
   useEffect(() => {
     // Petición para traerme la timeline
     getTimeline(page)
@@ -50,11 +60,40 @@ const Timeline = () => {
     setLoading(true);
   }
 
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    if (tweetText) {
+      createTweet(tweetText)
+        .then(tweet => {
+          setTweetText('')
+
+          const newTweet = {
+            data: {...tweet, user: user.data},
+            likes: 0
+          }
+
+          setTweets([newTweet, ...tweets])
+        })
+        .catch(err => console.error(err))
+    }
+  }
+
+  const isValid = tweetText.length > 1;
+
   return (
     <div>
-      <h1>Aqui ira el input de añadir tweets</h1>
 
-      <div>
+      <form className="flex flex-col gap-2" onSubmit={onSubmit}>
+        <Input
+          label="¿En qué estás pensando hoy?"
+          onChange={onChange}
+          value={tweetText}
+        />
+        <Button text="Twittear" disabled={!isValid} />
+      </form>
+
+      <div className="mt-4">
         {tweets.map((tweet) => (
           <Tweet
             key={tweet.data.id}

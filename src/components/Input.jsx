@@ -2,7 +2,7 @@ const Input = ({ value, onChange, name, placeholder, type, label, error, onBlur 
   return (
     <div>
       <label htmlFor={name} className="block mb-2 font-medium text-tw-primary">
-        {label}:
+        {label}
       </label>
       <input
         type={type} name={name} id={name} value={value} onChange={onChange} placeholder={placeholder}
