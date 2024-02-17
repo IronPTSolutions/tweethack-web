@@ -20,7 +20,7 @@ const Tweet = ({ data, likes, isLiked, showLikeButton = true }) => {
   return (
     <div className="border-b p-2 flex gap-x-2">
       <Link to={`/users/${data.user.id}`}>
-        <Avatar />
+        <Avatar avatar={data.user.avatar} />
       </Link>
       <div>
         <p className="font-bold text-base">@{data.user.username}</p>
