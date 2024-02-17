@@ -9,7 +9,7 @@ const Profile = ({ user }) => {
         <h1 className="font-bold text-2xl">@{user.data.username}</h1>
       </div>
 
-      <Tabbar userId={user.data.id} />
+      <Tabbar user={user} />
     </div>
   )
 }

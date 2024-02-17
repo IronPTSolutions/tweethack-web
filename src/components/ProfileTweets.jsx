@@ -8,8 +8,6 @@ const ProfileTweets = ({ userId }) => {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true)
 
-  console.log(user.data.likes)
-
   useEffect(() => {
     getUserTweets(userId)
       .then(DBTweets => {

@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import ProfileTweets from './ProfileTweets';
+import FavTweets from './FavTweets';
 
-const Tabbar = ({ userId }) => {
+const Tabbar = ({ user }) => {
+  const favTweets = useMemo(() => user.data.likes.map((like) => ({data: like.tweet})), [user.data.likes]);
+
   const tabs = [
     {
       key: 0,
       title: 'Tweets',
-      body: <ProfileTweets userId={userId} />
+      body: <ProfileTweets userId={user.data.id} />
     },
     {
       key: 1,
@@ -22,7 +25,7 @@ const Tabbar = ({ userId }) => {
     {
       key: 3,
       title: 'Favoritos',
-      body: <>Favoritos</>
+      body: <FavTweets tweets={favTweets}  />
     },
   ]
 
