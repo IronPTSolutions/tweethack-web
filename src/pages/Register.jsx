@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { object, string, mixed } from 'yup';
 import { useFormik } from 'formik';
 import Input from "../components/Input";
 import { register } from '../services/AuthService';
@@ -8,19 +8,26 @@ import Button from '../components/Button';
 const userSchema = object({
   username: string().required('Required field'),
   email: string().email('Enter a valid email').required('Required field'),
-  password: string().min(8, 'Password of at least 8 characters').required('Required field')
+  password: string().min(8, 'Password of at least 8 characters').required('Required field'),
+  avatar: mixed().required('Required field')
 });
 
 const Register = () => {
   const navigate = useNavigate()
-  const { values, errors, touched, isValid, handleSubmit, handleChange, handleBlur } = useFormik({
+  const { values, errors, touched, isValid, setFieldValue, handleSubmit, handleChange, handleBlur } = useFormik({
     initialValues: {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      avatar: ''
     },
     onSubmit: (values) => {
-      register(values)
+      const data = new FormData()
+      Object.keys(values).forEach(keyValue => {
+        data.append(keyValue, values[keyValue])
+      })
+
+      register(data)
         .then(() => {
           navigate('/login')
         })
@@ -63,6 +70,17 @@ const Register = () => {
             value={values.password}
             error={touched.password && errors.password}
             onChange={handleChange}
+            onBlur={handleBlur}
+          />
+          <Input
+            name="avatar"
+            type="file"
+            label="Add your photo"
+            // value={values.avatar}
+            error={touched.avatar && errors.avatar}
+            onChange={(event) => {
+              setFieldValue("avatar", event.currentTarget.files[0]);
+            }}
             onBlur={handleBlur}
           />
         </div>
