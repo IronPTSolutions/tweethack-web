@@ -22,9 +22,7 @@ const Login = () => {
     },
     onSubmit: (values) => {
       login(values)
-        .then(() => {
-          navigate('/profile');
-        })
+        .then(() => navigate('/profile'))
     },
     validationSchema: userSchema,
     validateOnChange: true,

@@ -2,12 +2,14 @@ import { createContext, useCallback, useEffect, useMemo, useState } from "react"
 import { login as loginService } from "../services/AuthService";
 import { getAccessToken, setAccessToken } from "../stores/AccessTokenStore";
 import { getCurrentUser } from "../services/UserService";
+import { useLocation } from "react-router-dom";
 
 const AuthContext = createContext()
 
 export default AuthContext;
 
 export const AuthContextProvider = ({ children }) => {
+  const { pathname } = useLocation();
   const [user, setUser] = useState(null);
   const [isAuthFetched, setIsAuthFetched] = useState(false);
 
@@ -15,11 +17,11 @@ export const AuthContextProvider = ({ children }) => {
     getCurrentUser()
       .then(user => {
         setUser(user)
-      })
-      .catch(err => console.error(err))
-      .finally(() => {
         setIsAuthFetched(true)
-      });
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }, [])
 
   const login = useCallback((data) => {
@@ -29,7 +31,7 @@ export const AuthContextProvider = ({ children }) => {
         setAccessToken(response.accessToken)
       })
       .then(() => {
-        return fetchCurrentUser()
+        fetchCurrentUser()
       })
       .catch(err => console.error(err))
   }, [fetchCurrentUser])
@@ -38,14 +40,18 @@ export const AuthContextProvider = ({ children }) => {
     if (getAccessToken()) {
       fetchCurrentUser()
     } else {
-      setIsAuthFetched(true);
+      if (pathname !== '/login') {
+        setIsAuthFetched(true);
+      } else {
+        setIsAuthFetched(false);
+      }
     }
-  }, [fetchCurrentUser])
+  }, [fetchCurrentUser, pathname])
 
   const contextValue = useMemo(() => ({
     isAuthFetched,
     user,
-    login
+    login,
   }), [isAuthFetched, user, login]);
 
   return (
