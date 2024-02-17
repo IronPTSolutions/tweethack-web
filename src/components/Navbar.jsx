@@ -9,9 +9,13 @@ const Navbar = () => {
 
   const protectedRoutes = [
     {
+      to: '/timeline',
+      text: 'Timeline'
+    },
+    {
       to: '/profile',
       text: 'Profile'
-    }
+    },
   ]
 
   const unprotectedRoutes = [
